@@ -16,15 +16,6 @@ const adminController = {
       })
   },
 
-  getUsers: (req, res) => {
-    return User.findAll({ raw: true })
-      .then(users => {
-        return res.render('admin/users', {
-          users
-        })
-      })
-  },
-
   getRestaurant: (req, res) => {
     return Restaurant.findByPk(req.params.id, { raw: true }).then(restaurant => {
       return res.render('admin/restaurant', {
@@ -136,9 +127,36 @@ const adminController = {
             res.redirect('/admin/restaurants')
           })
       })
+  },
+
+  getUsers: (req, res) => {
+    return User.findAll({ raw: true })
+      .then(users => {
+        return res.render('admin/users', {
+          users
+        })
+      })
+      .catch(err => console.error(err))
+  },
+
+  toggleAdmin: (req, res) => {
+    return User.findByPk(req.params.id)
+      .then((user) => {
+        if (user.email === 'root@example.com') {
+          req.flash('error_messages', "Role of management account cannot be changed!")
+          return res.redirect('back')
+        }
+        user.isAdmin === false ? user.isAdmin = true : user.isAdmin = false
+        return user.update({
+          isAdmin: user.isAdmin
+        })
+          .then((user) => {
+            req.flash('success_messages', "User's role was successfully updated!")
+            res.redirect('/admin/users')
+          })
+      })
+      .catch(err => console.log(err))
   }
-
-
 }
 
 module.exports = adminController
