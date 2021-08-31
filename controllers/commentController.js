@@ -8,10 +8,12 @@ const commentController = {
       RestaurantId: req.body.restaurantId,
       UserId: req.user.id
     })
-    .then((comment) => {
-      res.redirect(`/restaurants/${req.body.restaurantId}`)
-    })
+      .then((comment) => {
+        res.redirect(`/restaurants/${req.body.restaurantId}`)
+      })
   }
+
+
 }
 
 module.exports = commentController
