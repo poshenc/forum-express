@@ -9,8 +9,8 @@ module.exports = {
         text: faker.lorem.sentence(),
         //UserId: Math.floor(Math.random() * 3) + 1, //for local db
         //RestaurantId: Math.floor(Math.random() * 50) + 1, //for local db
-        UserId: Math.floor(Math.random() * 3) * 10 + 5,
-        RestaurantId: Math.floor(Math.random() * 50) * 10 + 5,
+        UserId: Math.floor(Math.random() * 3) * 10 + 5, //for heroku db
+        RestaurantId: Math.floor(Math.random() * 50) * 10 + 5, //for heroku db
         createdAt: new Date(),
         updatedAt: new Date()
       })
