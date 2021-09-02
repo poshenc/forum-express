@@ -7,8 +7,10 @@ module.exports = {
       Array.from({ length: 20 }).map((d, i) =>
       ({
         text: faker.lorem.sentence(),
-        UserId: Math.floor(Math.random() * 3) + 1,
-        RestaurantId: Math.floor(Math.random() * 50) + 1,
+        //UserId: Math.floor(Math.random() * 3) + 1, //for local db
+        //RestaurantId: Math.floor(Math.random() * 50) + 1, //for local db
+        UserId: Math.floor(Math.random() * 3) * 10 + 5,
+        RestaurantId: Math.floor(Math.random() * 50) * 10 + 5,
         createdAt: new Date(),
         updatedAt: new Date()
       })
