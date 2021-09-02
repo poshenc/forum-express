@@ -1,9 +1,14 @@
 const bcrypt = require('bcryptjs')
 const db = require('../models')
 const User = db.User
+const Comment = db.Comment
+const Restaurant = db.Restaurant
+
+const helper = require('../_helpers')
 
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
+
 
 const userController = {
   signUpPage: (req, res) => {
@@ -52,19 +57,36 @@ const userController = {
 
   getUser: (req, res) => {
     const userId = req.params.id
+    const currentUserId = String(helper.getUser(req).id)
     User.findByPk(userId)
       .then(user => {
-        return res.render('profile', {
-          user: user.toJSON(),
-          userId: userId,
-          currentUserId: String(req.user.id)
+        Comment.findAndCountAll({
+          raw: true,
+          nest: true,
+          include: Restaurant,
+          where: { userId: userId }
         })
+          .then(results => {
+            const count = results.count
+            const commentData = results.rows.map(comment => ({
+              ...comment,
+              restaurantId: comment.Restaurant.id,
+              restaurantImage: comment.Restaurant.image
+            }))
+            return res.render('profile', {
+              user: user.toJSON(),
+              userId,
+              currentUserId,
+              count,
+              comments: commentData
+            })
+          })
       })
       .catch(err => console.log(err))
   },
 
   editUser: (req, res) => {
-    if (req.params.id !== String(req.user.id)) {
+    if (req.params.id !== String(helper.getUser(req).id)) {
       req.flash('error_messages', '無法編輯其他使用者的資料')
       return res.redirect(`/users/${req.user.id}`)
     }
