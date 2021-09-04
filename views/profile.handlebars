@@ -1,18 +1,18 @@
 <div class="row">
   <div class="card-body shadow d-flex">
     <div class="col-md-4">
-      <img class="img-responsive center-block" src="{{user.image}}" style="width: 100%;">
+      <img class="img-responsive center-block" src="{{user.image}}">
     </div>
 
     <div class="col-md-8">
       <h1>{{user.name}}</h1>
       <p>{{user.email}}</p>
       <p><strong>{{count}} 已評論餐廳</strong></p>
-      {{#ifCond userId currentUserId }}
+      {{#if editable }}
       <a href='/users/{{user.id}}/edit'>
         <button type="button" class="btn btn-primary">Edit</button>
       </a>
-      {{/ifCond}}
+      {{/if}}
     </div>
   </div>
 </div>
@@ -21,8 +21,8 @@
   <h6 class="card-header">{{count}} 已評論餐廳</h6>
   <div class="card-body">
     {{#each comments}}
-    <a href="/restaurants/{{this.restaurantId}}" style="display: inline-block;">
-      <img src="{{this.restaurantImage}}" class="img m-2" style="width: 3rem; height: 3rem;">
+    <a href="/restaurants/{{this.restaurantId}}">
+      <img src="{{this.restaurantImage}}" class="commented-restaurants">
     </a>
     {{/each}}
   </div>

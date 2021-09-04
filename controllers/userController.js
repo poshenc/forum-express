@@ -59,6 +59,7 @@ const userController = {
   getUser: (req, res) => {
     const userId = req.params.id
     const currentUserId = String(helper.getUser(req).id)
+    const editable = userId === currentUserId
     User.findByPk(userId)
       .then(user => {
         Comment.findAndCountAll({
@@ -76,8 +77,7 @@ const userController = {
             }))
             return res.render('profile', {
               user: user.toJSON(),
-              userId,
-              currentUserId,
+              editable,
               count,
               comments: commentData
             })
@@ -143,9 +143,9 @@ const userController = {
       UserId: req.user.id,
       RestaurantId: req.params.restaurantId
     })
-    .then((restaurant) => {
-      return res.redirect('back')
-    })
+      .then((restaurant) => {
+        return res.redirect('back')
+      })
   },
 
   removeFavorite: (req, res) => {
@@ -155,12 +155,12 @@ const userController = {
         RestaurantId: req.params.restaurantId
       }
     })
-    .then((favorite) => {
-      favorite.destroy()
-      .then((restaurant) => {
-        return res.redirect('back')
+      .then((favorite) => {
+        favorite.destroy()
+          .then((restaurant) => {
+            return res.redirect('back')
+          })
       })
-    })
   }
 
 }

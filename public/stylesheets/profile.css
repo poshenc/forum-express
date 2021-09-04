@@ -1,0 +1,13 @@
+a {
+  display: inline-block;
+}
+
+img {
+  width: 100%;
+}
+
+.commented-restaurants {
+  margin-right: 0.5rem;
+  width: 3rem;
+  height: 3rem;
+}
