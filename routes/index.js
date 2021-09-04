@@ -37,6 +37,7 @@ module.exports = (app, passport) => {
   app.get('/restaurants', authenticate, restController.getRestaurants)
   app.get('/restaurants/feeds', authenticate, restController.getFeeds)
   app.get('/restaurants/:id', authenticate, restController.getRestaurant)
+  app.get('/restaurants/:id/dashboard', authenticate, restController.getDashboard)
 
   // 連到 / admin 頁面就轉到 / admin / restaurants
   app.get('/admin', authenticatedAdmin, (req, res) => res.redirect('/admin/restaurants'))
