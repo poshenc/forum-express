@@ -61,7 +61,8 @@ const restController = {
       ]
     })
       .then(restaurant => {
-        res.render('restaurant', {
+        restaurant.increment('viewCounts', { by: 1 })
+        return res.render('restaurant', {
           restaurant: restaurant.toJSON()
         })
       })
@@ -98,7 +99,6 @@ const restController = {
         { model: Comment, include: [User] }
       ]
     })
-    console.log(restaurant)
     return res.render('dashboard', { restaurant: restaurant.toJSON() })
   },
 
@@ -106,3 +106,5 @@ const restController = {
 }
 
 module.exports = restController
+
+
