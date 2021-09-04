@@ -35,6 +35,8 @@ module.exports = (app, passport) => {
   app.get('/', authenticate, (req, res) => res.redirect('/restaurants'))
   //在 /restaurants 底下則交給 restController.getRestaurants 來處理
   app.get('/restaurants', authenticate, restController.getRestaurants)
+  app.get('/restaurants/feeds', authenticate, restController.getFeeds)
+  app.get('/restaurants/:id', authenticate, restController.getRestaurant)
 
   // 連到 / admin 頁面就轉到 / admin / restaurants
   app.get('/admin', authenticatedAdmin, (req, res) => res.redirect('/admin/restaurants'))
@@ -57,7 +59,6 @@ module.exports = (app, passport) => {
   app.put('/admin/categories/:id', authenticatedAdmin, categoryController.putCategory)
   app.delete('/admin/categories/:id', authenticatedAdmin, categoryController.deleteCategory)
 
-  app.get('/restaurants/:id', authenticate, restController.getRestaurant)
 
   app.post('/comments', authenticate, commentController.postComment)
   app.delete('/comments/:id', authenticate, commentController.deleteComment)
