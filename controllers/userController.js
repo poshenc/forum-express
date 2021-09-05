@@ -60,30 +60,34 @@ const userController = {
 
   getUser: (req, res) => {
     const userId = req.params.id
-    const currentUserId = String(helper.getUser(req).id)
-    const editable = userId === currentUserId
-    User.findByPk(userId)
-      .then(user => {
-        Comment.findAndCountAll({
-          raw: true,
-          nest: true,
-          include: Restaurant,
-          where: { userId: userId }
+    const currentUserId = helper.getUser(req).id
+    const editable = Number(userId) === currentUserId
+    return User.findByPk(userId, {
+      include: [
+        { model: Comment, include: [Restaurant], attributes: ['id'] },
+        { model: User, as: 'Followers', attributes: ['image', 'id'] },
+        { model: User, as: 'Followings', attributes: ['image', 'id'] },
+        { model: Restaurant, as: 'FavoritedRestaurants', attributes: ['image', 'id'] }
+      ]
+    })
+      .then(currentUser => {
+        const comments = currentUser.Comments.map(e => e.Restaurant.dataValues)
+        const count = comments.length
+
+        const followingCounts = currentUser.Followings.length
+        const followerCounts = currentUser.Followers.length
+        const favRestaurantCounts = currentUser.FavoritedRestaurants.length
+        const isFollowed = currentUser.Followers.map((d) => d.id).includes(req.user.id)
+        return res.render('profile', {
+          user: currentUser.toJSON(),
+          editable,
+          count,
+          comments,
+          followingCounts,
+          followerCounts,
+          favRestaurantCounts,
+          isFollowed
         })
-          .then(results => {
-            const count = results.count
-            const commentData = results.rows.map(comment => ({
-              ...comment,
-              restaurantId: comment.Restaurant.id,
-              restaurantImage: comment.Restaurant.image
-            }))
-            return res.render('profile', {
-              user: user.toJSON(),
-              editable,
-              count,
-              comments: commentData
-            })
-          })
       })
       .catch(err => console.log(err))
   },
