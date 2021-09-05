@@ -72,8 +72,15 @@ const userController = {
     })
       .then(currentUser => {
         const comments = currentUser.Comments.map(e => e.Restaurant.dataValues)
-        const count = comments.length
+        //剔除重覆評論的餐廳
+        const set = new Set()
+        const filteredComments = comments.filter((obj) => {
+          const isPresentInSet = set.has(obj.name)
+          set.add(obj.name)
+          return !isPresentInSet
+        })
 
+        const count = filteredComments.length
         const followingCounts = currentUser.Followings.length
         const followerCounts = currentUser.Followers.length
         const favRestaurantCounts = currentUser.FavoritedRestaurants.length
@@ -82,7 +89,7 @@ const userController = {
           user: currentUser.toJSON(),
           editable,
           count,
-          comments,
+          comments: filteredComments,
           followingCounts,
           followerCounts,
           favRestaurantCounts,
@@ -211,7 +218,7 @@ const userController = {
       }))
       // 依追蹤者人數排序清單
       users = users.sort((a, b) => b.FollowerCount - a.FollowerCount)
-      return res.render('topUser', { users: users })
+      return res.render('topUser', { users: users, isSelf: true })
     })
   },
 
