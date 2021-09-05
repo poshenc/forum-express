@@ -4,6 +4,7 @@ const User = db.User
 const Comment = db.Comment
 const Restaurant = db.Restaurant
 const Favorite = db.Favorite
+const Like = db.Like
 
 const helper = require('../_helpers')
 
@@ -158,6 +159,31 @@ const userController = {
       .then((favorite) => {
         favorite.destroy()
           .then((restaurant) => {
+            return res.redirect('back')
+          })
+      })
+  },
+
+  addLike: (req, res) => {
+    return Like.create({
+      UserId: req.user.id,
+      RestaurantId: req.params.restaurantId
+    })
+      .then(restaurant => {
+        return res.redirect('back')
+      })
+  },
+
+  removeLike: (req, res) => {
+    return Like.findOne({
+      where: {
+        UserId: req.user.id,
+        RestaurantId: req.params.restaurantId
+      }
+    })
+      .then(like => {
+        like.destroy()
+          .then(restaurant => {
             return res.redirect('back')
           })
       })
