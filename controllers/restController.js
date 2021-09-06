@@ -122,8 +122,8 @@ const restController = {
       FavoriteUsersCount: restaurant.FavoritedUsers.length,
       isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(restaurant.id),
     }))
-    restaurants = restaurants.filter((r) => r.FavoriteUsersCount !== 0)
     restaurants = restaurants.sort((a, b) => b.FavoriteUsersCount - a.FavoriteUsersCount).slice(0, 10)
+    restaurants = restaurants.filter((r) => r.FavoriteUsersCount !== 0)
     return res.render('topRestaurant', { restaurants })
   }
 
