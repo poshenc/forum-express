@@ -79,20 +79,10 @@ const userController = {
           set.add(obj.name)
           return !isPresentInSet
         })
-
-        const count = filteredComments.length
-        const followingCounts = currentUser.Followings.length
-        const followerCounts = currentUser.Followers.length
-        const favRestaurantCounts = currentUser.FavoritedRestaurants.length
         const isFollowed = currentUser.Followers.map((d) => d.id).includes(req.user.id)
         return res.render('profile', {
-          user: currentUser.toJSON(),
-          editable,
-          count,
+          currentUser: currentUser.toJSON(),
           comments: filteredComments,
-          followingCounts,
-          followerCounts,
-          favRestaurantCounts,
           isFollowed
         })
       })
@@ -223,6 +213,10 @@ const userController = {
   },
 
   addFollowing: (req, res) => {
+    if (req.user.id === Number(req.params.userId)) {
+      req.flash('error_messages', 'users cannot follow their own profile!')
+      return res.redirect('back')
+    }
     return Followship.create({
       followerId: req.user.id,
       followingId: req.params.userId
