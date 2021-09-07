@@ -7,29 +7,19 @@ const User = db.User
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
+const adminService = require('../services/adminService.js')
+
 const adminController = {
   getRestaurants: (req, res) => {
-    return Restaurant.findAll({
-      raw: true,
-      nest: true,
-      include: [Category]
+    adminService.getRestaurants(req, res, (data) => {
+      return res.render('admin/restaurants', data)
     })
-      .then(restaurants => {
-        return res.render('admin/restaurants', {
-          restaurants
-        })
-      })
   },
 
   getRestaurant: (req, res) => {
-    return Restaurant.findByPk(req.params.id, {
-      include: [Category]
+    adminController.getRestaurant(req, res, (data) => {
+      return res.render('admin/restaurant', data)
     })
-      .then(restaurant => {
-        return res.render('admin/restaurant', {
-          restaurant: restaurant.toJSON()
-        })
-      })
   },
 
   createRestaurant: (req, res) => {
