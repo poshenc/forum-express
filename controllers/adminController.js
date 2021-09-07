@@ -17,7 +17,7 @@ const adminController = {
   },
 
   getRestaurant: (req, res) => {
-    adminController.getRestaurant(req, res, (data) => {
+    adminService.getRestaurant(req, res, (data) => {
       return res.render('admin/restaurant', data)
     })
   },
