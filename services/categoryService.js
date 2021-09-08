@@ -22,7 +22,34 @@ let categoryService = {
         })
       }
     })
-  }
+  },
+
+  postCategory: (req, res, callback) => {
+    if (!req.body.name) {
+      callback({ status: 'error', message: "please enter the name of category" })
+    } else {
+      return Category.create({
+        name: req.body.name
+      })
+        .then((category) => {
+          callback({ status: 'success', message: 'category was successfully created' })
+        })
+    }
+  },
+
+  putCategory: (req, res, callback) => {
+    if (!req.body.name) {
+      callback({ status: 'error', message: "please enter the name of category" })
+    } else {
+      return Category.findByPk(req.params.id)
+        .then((category) => {
+          category.update(req.body)
+            .then((category) => {
+              callback({ status: 'success', message: 'category was successfully edited' })
+            })
+        })
+    }
+  },
 }
 
 module.exports = categoryService
